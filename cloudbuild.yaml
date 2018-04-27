@@ -55,10 +55,35 @@ steps:
         EOF
 
         kubectl patch --local -o yaml \
-          -f kubernetes/deployment.yaml \
+          -f kubernetes/deployment-1.yaml \
           -p "$(cat patch.yaml)"
 
-        mv deployment.yaml kubernetes/deployment.yaml
+        kubectl patch --local -o yaml \
+          -f kubernetes/deploymen-2.yaml \
+          -p "$(cat patch.yaml)"
+
+        kubectl patch --local -o yaml \
+          -f kubernetes/deployment-3.yaml \
+          -p "$(cat patch.yaml)"
+
+        kubectl patch --local -o yaml \
+          -f kubernetes/deployment-4.yaml \
+          -p "$(cat patch.yaml)"
+
+        kubectl patch --local -o yaml \
+          -f kubernetes/deployment-5.yaml \
+          -p "$(cat patch.yaml)"
+
+        kubectl patch --local -o yaml \
+          -f kubernetes/deployment-6.yaml \
+          -p "$(cat patch.yaml)"
+
+        mv deployment-1.yaml kubernetes/deployment-1.yaml
+        mv deployment-2.yaml kubernetes/deployment-2.yaml
+        mv deployment-3.yaml kubernetes/deployment-3.yaml
+        mv deployment-4.yaml kubernetes/deployment-4.yaml
+        mv deployment-5.yaml kubernetes/deployment-5.yaml
+        mv deployment-6.yaml kubernetes/deployment-6.yaml
 
         kubectl apply --recursive -f kubernetes
 

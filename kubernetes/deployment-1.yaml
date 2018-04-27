@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - env:
-        - name: NODE_ENV
-          value: hashcode
+        - name: TEST_ID
+          value: 1
         image: gcr.io/zino-app-195912/hashcode
         name: hashcode
