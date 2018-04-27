@@ -1,13 +1,11 @@
-FROM launcher.gcr.io/google/ubuntu16_04 AS build-env
+FROM gcc:latest AS build-env
 
-COPY . /usr/src
-WORKDIR /usr/src
+COPY . /usr/app
+WORKDIR /usr/app
 
-# use clean to execute
-FROM launcher.gcr.io/google/ubuntu16_04
+RUN gcc -std=c++14 -lstdc++ src/main.cpp -o lib/main
 
-COPY --from=build-env /usr/src /usr/src
-WORKDIR /usr/src
+ENV INPUT_FILE=tests/1.in
+ENV OUTPUT_FILE=tests/1.out
 
-# start the code
-CMD [ "./lib" ]
+CMD [ "./lib/main" ]
