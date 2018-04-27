@@ -1,20 +1,25 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    int n, k, t;
-    int cnt = 0;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    // Enable input from file
+    if (argc > 1)
     {
-        cin >> t;
-        if (t % k == 0)
-            cnt++;
+        freopen(argv[1], "r", stdin);
     }
-    cout << cnt << "\n";
+
+    // Enable output from file
+    if (argc > 2)
+    {
+        freopen(argv[2], "w", stdout);
+    }
+
+    char x;
+    cin >> x;
+
+    cout << x;
+
     return 0;
 }
