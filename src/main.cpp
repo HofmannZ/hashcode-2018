@@ -73,6 +73,9 @@ vector <buildingType> buildings, residential, utility;
 
 int main(int argc, char* argv[])
 {
+    double maxTime = 10;
+    clock_t beginTime = clock();
+
     // Enable input from file
     if (argc > 1) {
         freopen (argv[1], "r", stdin);
@@ -123,26 +126,42 @@ int main(int argc, char* argv[])
 
     buildingType* currentBuilding;
 
-    for (long i = 0; i< buildings.size(); i++) {
-        mostX = 0;
-        mostY = 0;
+    long inSize, outSize;
 
-        while(!buildings[i].canPlace(mostX, mostY)) {
+    for (long u = 0; u <= 10000000; u++) {
+        inSize = buildingPlan.size();
+        for (long i = 0; i< buildings.size(); i++) {
+            mostX = 0;
+            mostY = 0;
 
-            mostY++;
-            if (mostY == cityCols) {
-                mostX++;
-                mostY = 0;
+            while(!buildings[i].canPlace(mostX, mostY)) {
+
+                mostY++;
+                if (mostY == cityCols) {
+                    mostX++;
+                    mostY = 0;
+                }
+                if (mostX >= cityRows) {
+                    break;
+                }
             }
-            if (mostX >= cityRows) {
-                break;
+
+            if (buildings[i].canPlace(mostX, mostY)) {
+                buildings[i].place(mostX, mostY);
             }
         }
 
-        if (buildings[i].canPlace(mostX, mostY)) {
-            buildings[i].place(mostX, mostY);
+        outSize = buildingPlan.size();
+
+        if (double(clock() - beginTime) / CLOCKS_PER_SEC > maxTime) {
+            break;
+        }
+
+        if (outSize - inSize == 0) {
+            break;
         }
     }
+
     printf ("%ld\n", buildingPlan.size());
     for (long i = 0; i < buildingPlan.size(); i++) {
         printf ("%ld %ld %ld\n", buildingPlan[i].index, buildingPlan[i].x, buildingPlan[i].y);
