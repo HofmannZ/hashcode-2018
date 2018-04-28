@@ -10,8 +10,15 @@ int main(int argc, char *argv[])
     char *fileOutName;
     fileOutName = getenv("OUTPUT_FILE");
 
-    freopen(fileInName, "r", stdin);
-    freopen(fileOutName, "w", stdout);
+    if (argc > 1)
+    {
+        freopen(argv[2], "r", stdin);
+    }
+
+    if (argc > 2)
+    {
+        freopen(argv[3], "w", stdout);
+    }
 
     char x;
     cin >> x;
