@@ -1,0 +1,3 @@
+name: hashcode_2018
+dependencies:
+  args: "^1.4.3"
