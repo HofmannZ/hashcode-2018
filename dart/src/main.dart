@@ -54,8 +54,8 @@ class Project {
 
   bool canPlace(Cell cell) {
     // is outside of the city map
-    if (cell.column + this.width >= cityColumns ||
-        cell.row + this.height >= cityRows) {
+    if (cell.column + this.width > cityColumns ||
+        cell.row + this.height > cityRows) {
       return false;
     }
 
@@ -63,7 +63,7 @@ class Project {
     for (int i = 0; i < this.occupidCells.length; i++) {
       if (cityMap[cell.row + this.occupidCells[i].row]
               [cell.column + this.occupidCells[i].column] !=
-          -1) {
+          '.') {
         return false;
       }
     }
@@ -116,6 +116,7 @@ Future main(List<String> args) async {
   IOSink outputSink = new File(argResults['output']).openWrite();
 
   await printOutput(outputSink);
+  await printDebug();
 
   // close streams
   outputSink.close();
@@ -137,7 +138,7 @@ Future parseInput(Stream inputLines) async {
         nBuildingPlans = int.parse(lineItems[3]);
 
         projects = new List(nBuildingPlans);
-        cityMap = new List.filled(cityRows, new List.filled(cityColumns, -1));
+        cityMap = new List.filled(cityRows, new List.filled(cityColumns, '.'));
       } else {
         if (lineInParsingProject == 0) {
           String type = lineItems[0];
@@ -186,6 +187,16 @@ Future printOutput(IOSink outputSink) async {
     await outputSink.write(' ');
     await outputSink.write(constructedBuildings[i][2]);
     await outputSink.write('\n');
+  }
+}
+
+Future printDebug() async {
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      stdout.write(cityMap[row][column]);
+    }
+
+    stdout.write('\n');
   }
 }
 
