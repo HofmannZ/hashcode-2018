@@ -11,9 +11,9 @@
       "type": "dart",
       "args": [
         "--input",
-        "tests/a_example.in",
+        "inputs/a_example.in",
         "--output",
-        "results/a_example.out"
+        "outputs/a_example.out"
       ],
       "showMemoryUsage": true
     }

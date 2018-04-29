@@ -107,45 +107,11 @@ Future main(List<String> args) async {
   sortProject(utilityProjects);
 
   // place residential projects
-  int currentResidentialProject = 0;
-
-  for (int row = 0; row < cityRows; row++) {
-    for (int column = 0; column < cityColumns; column++) {
-      Cell cell = new Cell(row, column);
-
-      if (residentialProjects[currentResidentialProject].canPlace(cell)) {
-        residentialProjects[currentResidentialProject].place(cell);
-
-        // add horizontal distance between two residential projects
-        column += maximumWalkingDistance;
-
-        // add vertical distance between two residential projects
-        if (column + residentialProjects[currentResidentialProject].width >=
-            cityColumns) {
-          row += maximumWalkingDistance;
-        }
-      }
-    }
-  }
+  placeResidentialProjects(residentialProjects, 0);
 
   // place utility projects
-  int currentUtilityProject = 0;
-
-  for (int row = 0; row < cityRows; row++) {
-    for (int column = 0; column < cityColumns; column++) {
-      Cell cell = new Cell(row, column);
-
-      if (utilityProjects[currentUtilityProject].canPlace(cell)) {
-        utilityProjects[currentUtilityProject].place(cell);
-
-        currentUtilityProject++;
-      }
-
-      if (currentUtilityProject >= utilityProjects.length) {
-        currentUtilityProject = 0;
-      }
-    }
-  }
+  placeUtilityProjects(utilityProjects, 0);
+  placeUtilityProjects(utilityProjects, 1);
 
   IOSink outputSink = new File(argResults['output']).openWrite();
 
@@ -239,4 +205,49 @@ List<Project> getUtilityProjects() {
 
 void sortProject(List<Project> project) {
   project.sort((a, b) => b.efficiency.compareTo(a.efficiency));
+}
+
+void placeResidentialProjects(
+  List<Project> residentialProjects,
+  int currentResidentialProject,
+) {
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      Cell cell = new Cell(row, column);
+
+      if (residentialProjects[currentResidentialProject].canPlace(cell)) {
+        residentialProjects[currentResidentialProject].place(cell);
+
+        // // add horizontal distance between two residential projects
+        // column += maximumWalkingDistance;
+
+        // // add vertical distance between two residential projects
+        // if (column + residentialProjects[currentResidentialProject].width >=
+        //     cityColumns) {
+        //   row += maximumWalkingDistance;
+        // }
+      }
+    }
+  }
+}
+
+void placeUtilityProjects(List<Project> utilityProjects, int x) {
+  // int currentUtilityProject = 0;
+  int currentUtilityProject = x;
+
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      Cell cell = new Cell(row, column);
+
+      if (utilityProjects[currentUtilityProject].canPlace(cell)) {
+        utilityProjects[currentUtilityProject].place(cell);
+
+        // currentUtilityProject++;
+      }
+
+      if (currentUtilityProject >= utilityProjects.length) {
+        // currentUtilityProject = 0;
+      }
+    }
+  }
 }

@@ -1,11 +1,16 @@
 import numpy as np
 import matplotlib.image
 
-input_path = 'input/'
-output_path = 'output/'
+input_path = 'inputs/'
+output_path = 'outputs/'
 
 files = [
-  'e_precise_fit'
+  'a_example',
+  'b_short_walk',
+  'c_going_green',
+  'd_wide_selection',
+  'e_precise_fit',
+  'f_different_footprints'
 ]
 
 extensions = [
@@ -19,7 +24,7 @@ file_a_out = output_path + files[0] + extensions[1]
 with open(file_a_in) as f:
   file_a_content = f.readlines()
 
-file_a_content = [x.strip() for x in file_a_content] 
+file_a_content = [x.strip() for x in file_a_content]
 line_index = 0
 
 class Buiding:
@@ -40,7 +45,7 @@ class Buiding:
 
 def readLine():
   global line_index
-  
+
   to_return = file_a_content[line_index]
   line_index += 1
 
@@ -48,7 +53,7 @@ def readLine():
 
 def readLineAsListOfInts():
   line = readLine()
-  
+
   return map(int, line.split())
 
 def readBuldingInformation():
@@ -89,7 +94,7 @@ line_index = 0
 with open(file_a_out) as f:
   file_a_content = f.readlines()
 
-file_a_content = [x.strip() for x in file_a_content] 
+file_a_content = [x.strip() for x in file_a_content]
 
 num_of_projects = list(readLineAsListOfInts())[0]
 
@@ -98,6 +103,4 @@ for project_id in range(num_of_projects):
   building_id, left_x, left_y = readLineAsListOfInts()
   city_map[left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape
 
-print(city_map)
-
-matplotlib.image.imsave('city.png', city_map.astype(np.uint8), cmap='gray')
+matplotlib.image.imsave(files[0] + '_city_map.png', city_map.astype(np.uint8), cmap='gray')
