@@ -10,16 +10,23 @@ int maximumWalkingDistance;
 int nBuildingPlans;
 
 List<Project> projects;
-
 List<List<int>> cityMap;
+List<List<int>> constructedBuildings = new List();
+
+class Cell {
+  int row, column;
+
+  // I ❤️ Dart for this
+  Cell(this.row, this.column);
+}
 
 class Project {
   String type;
   int index, height, width, capacityOrService, surface;
   double efficiency;
-  List<List<int>> occupidCells = new List();
+  List<Cell> occupidCells = new List();
 
-  // I ❤️ Dart for this
+  // Dart is amamzing!
   Project(
     this.index,
     this.type,
@@ -36,38 +43,40 @@ class Project {
     }
   }
 
-  void parseAndAddRowOfCells(int rowIndex, String rawRow) {
+  void parseAndAddRowOfCells(int index, String rawRow) {
     for (int i = 0; i < rawRow.length; i++) {
       if (rawRow[i] == '#') {
-        List<int> cell = [i, rowIndex];
+        Cell cell = new Cell(index, i);
         occupidCells.add(cell);
       }
     }
   }
 
-  bool canPlace(int x, int y) {
-    // is outside of the city
-    if (x + this.height > cityRows || y + this.width > cityColumns) {
+  bool canPlace(Cell cell) {
+    // is outside of the city map
+    if (cell.column + this.width >= cityColumns ||
+        cell.row + this.height >= cityRows) {
       return false;
     }
 
-    // check all cells
-    for (int i = 0; i < this.height; i++) {
-      for (int j = 0; j < this.width; j++) {
-        if (cityMap[x + i][y + j] != '.' && this.occupidCells[i][j] == '#') {
-          return false;
-        }
+    // check all occupid cells
+    for (int i = 0; i < this.occupidCells.length; i++) {
+      if (cityMap[cell.row + this.occupidCells[i].row]
+              [cell.column + this.occupidCells[i].column] !=
+          -1) {
+        return false;
       }
     }
 
     return true;
   }
 
-  void place(int x, int y) {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        cityMap[x + i][y + j] = this.index;
-      }
+  void place(Cell cell) {
+    constructedBuildings.add([this.index, cell.row, cell.column]);
+
+    for (int i = 0; i < this.occupidCells.length; i++) {
+      cityMap[this.occupidCells[i].row + cell.row]
+          [this.occupidCells[i].column + cell.column] = this.index;
     }
   }
 }
@@ -97,37 +106,50 @@ Future main(List<String> args) async {
   sortProject(residentialProjects);
   sortProject(utilityProjects);
 
-  for (int i = 0; i < utilityProjects.length; i++) {
-    stdout.writeln(utilityProjects[i].type);
-    stdout.writeln(utilityProjects[i].height);
-    stdout.writeln(utilityProjects[i].width);
-    stdout.writeln(utilityProjects[i].capacityOrService);
-    stdout.writeln(utilityProjects[i].surface);
-    stdout.writeln(utilityProjects[i].efficiency);
-    for (int j = 0; j < utilityProjects[i].occupidCells.length; j++) {
-      stdout.writeln(utilityProjects[i].occupidCells[j][0].toString() +
-          ',' +
-          utilityProjects[i].occupidCells[j][1].toString());
+  // place residential projects
+  int currentResidentialProject = 0;
+
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      Cell cell = new Cell(row, column);
+
+      if (residentialProjects[currentResidentialProject].canPlace(cell)) {
+        residentialProjects[currentResidentialProject].place(cell);
+
+        // add horizontal distance between two residential projects
+        column += maximumWalkingDistance;
+
+        // add vertical distance between two residential projects
+        if (column + residentialProjects[currentResidentialProject].width >=
+            cityColumns) {
+          row += maximumWalkingDistance;
+        }
+      }
     }
-    stdout.write('\n');
   }
 
-  for (int i = 0; i < residentialProjects.length; i++) {
-    stdout.writeln(residentialProjects[i].type);
-    stdout.writeln(residentialProjects[i].height);
-    stdout.writeln(residentialProjects[i].width);
-    stdout.writeln(residentialProjects[i].capacityOrService);
-    stdout.writeln(residentialProjects[i].surface);
-    stdout.writeln(residentialProjects[i].efficiency);
-    for (int j = 0; j < residentialProjects[i].occupidCells.length; j++) {
-      stdout.writeln(residentialProjects[i].occupidCells[j][0].toString() +
-          ',' +
-          residentialProjects[i].occupidCells[j][1].toString());
+  // place utility projects
+  int currentUtilityProject = 0;
+
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      Cell cell = new Cell(row, column);
+
+      if (utilityProjects[currentUtilityProject].canPlace(cell)) {
+        utilityProjects[currentUtilityProject].place(cell);
+
+        currentUtilityProject++;
+      }
+
+      if (currentUtilityProject >= utilityProjects.length) {
+        currentUtilityProject = 0;
+      }
     }
-    stdout.write('\n');
   }
 
   IOSink outputSink = new File(argResults['output']).openWrite();
+
+  await printOutput(outputSink);
 
   // close streams
   outputSink.close();
@@ -149,7 +171,7 @@ Future parseInput(Stream inputLines) async {
         nBuildingPlans = int.parse(lineItems[3]);
 
         projects = new List(nBuildingPlans);
-        cityMap = new List.filled(cityRows, new List.filled(cityColumns, 0));
+        cityMap = new List.filled(cityRows, new List.filled(cityColumns, -1));
       } else {
         if (lineInParsingProject == 0) {
           String type = lineItems[0];
@@ -188,6 +210,19 @@ Future parseInput(Stream inputLines) async {
   }
 }
 
+Future printOutput(IOSink outputSink) async {
+  await outputSink.writeln(constructedBuildings.length);
+
+  for (int i = 0; i < constructedBuildings.length; i++) {
+    await outputSink.write(constructedBuildings[i][0]);
+    await outputSink.write(' ');
+    await outputSink.write(constructedBuildings[i][1]);
+    await outputSink.write(' ');
+    await outputSink.write(constructedBuildings[i][2]);
+    await outputSink.write('\n');
+  }
+}
+
 List<Project> getResidentialProjects() {
   List<Project> residentialProjects = new List.from(projects);
   residentialProjects.retainWhere((Project project) => project.type == 'R');
@@ -203,5 +238,5 @@ List<Project> getUtilityProjects() {
 }
 
 void sortProject(List<Project> project) {
-  project.sort((a, b) => a.efficiency.compareTo(b.efficiency));
+  project.sort((a, b) => b.efficiency.compareTo(a.efficiency));
 }
