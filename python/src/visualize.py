@@ -18,8 +18,8 @@ extensions = [
   '.out'
 ]
 
-file_a_in = input_path + files[0] + extensions[0]
-file_a_out = output_path + files[0] + extensions[1]
+file_a_in = input_path + files[1] + extensions[0]
+file_a_out = output_path + files[1] + extensions[1]
 
 with open(file_a_in) as f:
   file_a_content = f.readlines()
@@ -103,4 +103,4 @@ for project_id in range(num_of_projects):
   building_id, left_x, left_y = readLineAsListOfInts()
   city_map[left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape
 
-matplotlib.image.imsave(files[0] + '_city_map.png', city_map.astype(np.uint8), cmap='gray')
+matplotlib.image.imsave(files[1] + '_city_map.png', city_map.astype(np.uint8), cmap='gray')

@@ -11,5 +11,7 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "python.linting.pylintEnabled": false,
+    "python.formatting.provider": "autopep8"
 }

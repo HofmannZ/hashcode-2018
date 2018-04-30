@@ -10,7 +10,7 @@ int maximumWalkingDistance;
 int nBuildingPlans;
 
 List<Project> projects;
-List<List<int>> cityMap;
+List<List<int>> cityMap = new List();
 List<List<int>> constructedBuildings = new List();
 
 class Cell {
@@ -63,7 +63,7 @@ class Project {
     for (int i = 0; i < this.occupidCells.length; i++) {
       if (cityMap[cell.row + this.occupidCells[i].row]
               [cell.column + this.occupidCells[i].column] !=
-          '.') {
+          -1) {
         return false;
       }
     }
@@ -77,6 +77,8 @@ class Project {
     for (int i = 0; i < this.occupidCells.length; i++) {
       cityMap[this.occupidCells[i].row + cell.row]
           [this.occupidCells[i].column + cell.column] = this.index;
+
+      // pintDebug();
     }
   }
 }
@@ -110,13 +112,11 @@ Future main(List<String> args) async {
   placeResidentialProjects(residentialProjects, 0);
 
   // place utility projects
-  placeUtilityProjects(utilityProjects, 0);
-  placeUtilityProjects(utilityProjects, 1);
+  placeUtilityProjects(utilityProjects);
 
   IOSink outputSink = new File(argResults['output']).openWrite();
 
   await printOutput(outputSink);
-  await printDebug();
 
   // close streams
   outputSink.close();
@@ -138,7 +138,16 @@ Future parseInput(Stream inputLines) async {
         nBuildingPlans = int.parse(lineItems[3]);
 
         projects = new List(nBuildingPlans);
-        cityMap = new List.filled(cityRows, new List.filled(cityColumns, '.'));
+
+        for (int row = 0; row < cityRows; row++) {
+          cityMap.add(new List());
+
+          for (int column = 0; column < cityColumns; column++) {
+            cityMap[row].add(-1);
+          }
+        }
+
+        // pintDebug();
       } else {
         if (lineInParsingProject == 0) {
           String type = lineItems[0];
@@ -190,14 +199,14 @@ Future printOutput(IOSink outputSink) async {
   }
 }
 
-Future printDebug() async {
-  for (int row = 0; row < cityRows; row++) {
-    for (int column = 0; column < cityColumns; column++) {
-      stdout.write(cityMap[row][column]);
-    }
+void pintDebug() {
+  print('City map:');
 
-    stdout.write('\n');
+  for (int i = 0; i < cityRows; i++) {
+    print(cityMap[i]);
   }
+
+  print('');
 }
 
 List<Project> getResidentialProjects() {
@@ -229,22 +238,22 @@ void placeResidentialProjects(
       if (residentialProjects[currentResidentialProject].canPlace(cell)) {
         residentialProjects[currentResidentialProject].place(cell);
 
-        // // add horizontal distance between two residential projects
-        // column += maximumWalkingDistance;
+        // add horizontal distance between two residential projects
+        column += maximumWalkingDistance;
 
-        // // add vertical distance between two residential projects
-        // if (column + residentialProjects[currentResidentialProject].width >=
-        //     cityColumns) {
-        //   row += maximumWalkingDistance;
-        // }
+        // add vertical distance between two residential projects
+        if (column + residentialProjects[currentResidentialProject].width >=
+            cityColumns) {
+          row += maximumWalkingDistance;
+        }
       }
     }
   }
 }
 
-void placeUtilityProjects(List<Project> utilityProjects, int x) {
-  // int currentUtilityProject = 0;
-  int currentUtilityProject = x;
+void placeUtilityProjects(List<Project> utilityProjects) {
+  int currentUtilityProject = 0;
+  // int currentUtilityProject = x;
 
   for (int row = 0; row < cityRows; row++) {
     for (int column = 0; column < cityColumns; column++) {
@@ -253,11 +262,11 @@ void placeUtilityProjects(List<Project> utilityProjects, int x) {
       if (utilityProjects[currentUtilityProject].canPlace(cell)) {
         utilityProjects[currentUtilityProject].place(cell);
 
-        // currentUtilityProject++;
+        currentUtilityProject++;
       }
 
       if (currentUtilityProject >= utilityProjects.length) {
-        // currentUtilityProject = 0;
+        currentUtilityProject = 0;
       }
     }
   }
