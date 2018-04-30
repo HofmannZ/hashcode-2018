@@ -2,8 +2,6 @@
 
 echo Running 5 tests...
 
-ls &
-
 lib ../tests/1.in ../tests/1.out &
 lib ../tests/2.in ../tests/2.out &
 lib ../tests/3.in ../tests/3.out &

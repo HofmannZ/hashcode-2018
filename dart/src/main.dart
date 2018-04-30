@@ -108,18 +108,30 @@ Future main(List<String> args) async {
   sortProject(residentialProjects);
   sortProject(utilityProjects);
 
-  // place residential projects
+  // remove less efficient utility project types that are already in included
+  List<Project> uniqueUtilityProjects =
+      getUniqueUtilityProjects(utilityProjects);
+
+  // place only the most efficient residential project
   placeResidentialProjects(residentialProjects, 0);
 
-  // place utility projects
-  placeUtilityProjects(utilityProjects);
+  // place the most efficient utility projects or their service
+  for (int i = 0; i < 16; i++) {
+    placeUtilityProjects(uniqueUtilityProjects);
+  }
 
-  // re-iterate with a differnd set of residential buildings
-  placeUtilityProjects(utilityProjects);
+  // re-iterate with the top 10% less efficient utility projects
+  for (int i = 0; i < utilityProjects.length / 10; i++) {
+    placeUtilityProjects(
+      utilityProjects,
+      currentUtilityProject: i,
+      placeUnique: false,
+    );
+  }
 
-  // re-iterate with top 10% less efficinet buildings that might fit in the free space
+  // re-iterate with the top 10% less efficient projects that might fit in the free space
   for (int i = 1; i < residentialProjects.length / 10; i++) {
-    placeResidentialProjects(residentialProjects, i);
+    placeResidentialProjects(residentialProjects, i, spaced: false);
   }
 
   IOSink outputSink = new File(argResults['output']).openWrite();
@@ -154,8 +166,6 @@ Future parseInput(Stream inputLines) async {
             cityMap[row].add(-1);
           }
         }
-
-        // pintDebug();
       } else {
         if (lineInParsingProject == 0) {
           String type = lineItems[0];
@@ -235,10 +245,41 @@ void sortProject(List<Project> project) {
   project.sort((a, b) => b.efficiency.compareTo(a.efficiency));
 }
 
+List<Project> getUniqueUtilityProjects(List<Project> utilityProjects) {
+  List<Project> uniqueUtilityProjects = new List();
+
+  bool hasMoreUnique = true;
+  int currentUtillity = 1;
+
+  while (hasMoreUnique) {
+    Project uniqueUtilityProject = utilityProjects.firstWhere((project) {
+      if (project.type != 'U') {
+        return false;
+      }
+
+      if (project.capacityOrService == currentUtillity) {
+        return true;
+      }
+
+      return false;
+    }, orElse: () => new Project(-1, 'U', 0, 0, 0));
+
+    if (uniqueUtilityProject.index != -1) {
+      uniqueUtilityProjects.add(uniqueUtilityProject);
+      currentUtillity++;
+    } else {
+      hasMoreUnique = false;
+    }
+  }
+
+  return uniqueUtilityProjects;
+}
+
 void placeResidentialProjects(
   List<Project> residentialProjects,
-  int currentResidentialProject,
-) {
+  int currentResidentialProject, {
+  bool spaced: true,
+}) {
   for (int row = 0; row < cityRows; row++) {
     for (int column = 0; column < cityColumns; column++) {
       Cell cell = new Cell(row, column);
@@ -246,23 +287,26 @@ void placeResidentialProjects(
       if (residentialProjects[currentResidentialProject].canPlace(cell)) {
         residentialProjects[currentResidentialProject].place(cell);
 
-        // add horizontal distance between two residential projects
-        column += maximumWalkingDistance;
+        if (spaced) {
+          // add horizontal distance between two residential projects
+          column += maximumWalkingDistance;
 
-        // add vertical distance between two residential projects
-        if (column + residentialProjects[currentResidentialProject].width >=
-            cityColumns) {
-          row += maximumWalkingDistance;
+          // add vertical distance between two residential projects
+          if (column + residentialProjects[currentResidentialProject].width >=
+              cityColumns) {
+            row += maximumWalkingDistance;
+          }
         }
       }
     }
   }
 }
 
-void placeUtilityProjects(List<Project> utilityProjects) {
-  int currentUtilityProject = 0;
-  // int currentUtilityProject = x;
-
+void placeUtilityProjects(
+  List<Project> utilityProjects, {
+  int currentUtilityProject: 0,
+  bool placeUnique: true,
+}) {
   for (int row = 0; row < cityRows; row++) {
     for (int column = 0; column < cityColumns; column++) {
       Cell cell = new Cell(row, column);
@@ -270,7 +314,9 @@ void placeUtilityProjects(List<Project> utilityProjects) {
       if (utilityProjects[currentUtilityProject].canPlace(cell)) {
         utilityProjects[currentUtilityProject].place(cell);
 
-        currentUtilityProject++;
+        if (placeUnique) {
+          currentUtilityProject++;
+        }
       }
 
       if (currentUtilityProject >= utilityProjects.length) {
