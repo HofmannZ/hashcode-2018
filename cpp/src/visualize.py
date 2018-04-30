@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.image
+import random
+import matplotlib.pyplot as plt
 
 input_path = 'input/'
 output_path = 'output/'
@@ -22,13 +24,13 @@ with open(file_a_in) as f:
 file_a_content = [x.strip() for x in file_a_content] 
 line_index = 0
 
-class Buiding:
+class Building:
     building_type = 'R'
     height = 0
     width = 0
     capacity_or_type = 0
 
-    def __init__(self, values):
+    def __init__(self, values, colors = [255, 0, 0]):
       [a, b, c, d] = values
 
       self.building_type = a
@@ -36,6 +38,7 @@ class Buiding:
       self.width = c
       self.capacity_or_type = d
       self.shape = np.zeros((b, c))
+      self.colors = colors
 
 
 def readLine():
@@ -63,7 +66,7 @@ def readBuildingRow():
 
 num_lines, num_columns, max_distance, num_buildings = readLineAsListOfInts()
 
-city_map = np.zeros((num_lines, num_columns))
+city_map = np.zeros((3, num_lines, num_columns))
 
 
 from matplotlib.colors import ListedColormap, NoNorm
@@ -72,16 +75,20 @@ cmap = ListedColormap(['#E0E0E0', '#FF8C00', '#8c00FF', '#00FF8C'])
 buildings = []
 
 for building_id in range(num_buildings):
-  newBuilding = Buiding(readBuldingInformation())
+  newBuilding = Building(readBuldingInformation())
+
+  if (newBuilding.building_type == 'R'):
+    newBuilding.colors = [random.randint(150, 255), 100, 100]
+  else:
+    newBuilding.colors = [0, random.randint(50, 100), random.randint(150, 200)]
 
   for row_id in range(newBuilding.height):
     newBuilding.shape[row_id] = readBuildingRow()
 
   newBuilding.shape[newBuilding.shape == 46] = 0
-  if (newBuilding.building_type == 'R'):
-    newBuilding.shape[newBuilding.shape == 35] = 122
-  else:
-    newBuilding.shape[newBuilding.shape == 35] = 255
+  newBuilding.shape[newBuilding.shape == 35] = 1
+
+  
   buildings.append(newBuilding)
 
 line_index = 0
@@ -96,8 +103,20 @@ num_of_projects = list(readLineAsListOfInts())[0]
 for project_id in range(num_of_projects):
 
   building_id, left_x, left_y = readLineAsListOfInts()
-  city_map[left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape
+  city_map[0][left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape * buildings[building_id].colors[0]
+  city_map[1][left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape * buildings[building_id].colors[1]
+  city_map[2][left_x : left_x + buildings[building_id].height, left_y : left_y + buildings[building_id].width] += buildings[building_id].shape * buildings[building_id].colors[2]
+
 
 print(city_map)
 
-matplotlib.image.imsave('city.png', city_map.astype(np.uint8), cmap='gray')
+rgbArray = np.zeros((num_lines, num_columns, 3), 'uint8')
+rgbArray[..., 0] = city_map[0]
+rgbArray[..., 1] = city_map[1]
+rgbArray[..., 2] = city_map[2]
+
+
+# matplotlib.image.imsave('city.png', city_map.astype(np.uint8), cmap='gray')
+img = plt.imshow(rgbArray)
+
+plt.show()
