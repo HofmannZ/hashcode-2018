@@ -116,7 +116,7 @@ Future main(List<String> args) async {
   placeResidentialProjects(residentialProjects, 0);
 
   // place the most efficient utility projects or their service
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 1024; i++) {
     placeUtilityProjects(uniqueUtilityProjects);
   }
 
