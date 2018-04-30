@@ -114,6 +114,14 @@ Future main(List<String> args) async {
   // place utility projects
   placeUtilityProjects(utilityProjects);
 
+  // re-iterate with a differnd set of residential buildings
+  placeUtilityProjects(utilityProjects);
+
+  // re-iterate with top 10% less efficinet buildings that might fit in the free space
+  for (int i = 1; i < residentialProjects.length / 10; i++) {
+    placeResidentialProjects(residentialProjects, i);
+  }
+
   IOSink outputSink = new File(argResults['output']).openWrite();
 
   await printOutput(outputSink);
