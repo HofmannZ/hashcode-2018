@@ -17,7 +17,10 @@ class Cell {
   int row, column;
 
   // I ❤️ Dart for this
-  Cell(this.row, this.column);
+  Cell(
+    this.row,
+    this.column,
+  );
 }
 
 class Project {
@@ -72,7 +75,11 @@ class Project {
   }
 
   void place(Cell cell) {
-    constructedBuildings.add([this.index, cell.row, cell.column]);
+    constructedBuildings.add([
+      this.index,
+      cell.row,
+      cell.column,
+    ]);
 
     for (int i = 0; i < this.occupidCells.length; i++) {
       cityMap[this.occupidCells[i].row + cell.row]
@@ -105,33 +112,40 @@ Future main(List<String> args) async {
   List<Project> utilityProjects = getUtilityProjects();
 
   // sort both lits based on their efficiency
-  sortProject(residentialProjects);
-  sortProject(utilityProjects);
+  sortProjects(residentialProjects);
+  sortProjects(utilityProjects);
 
   // remove less efficient utility project types that are already in included
   List<Project> uniqueUtilityProjects =
       getUniqueUtilityProjects(utilityProjects);
 
+  // sort unique utilities
+  sortProjects(uniqueUtilityProjects);
+
   // place only the most efficient residential project
-  placeResidentialProjects(residentialProjects, 0);
+  placeResidentialProjects(
+    residentialProjects,
+    currentResidentialProject: 0,
+  );
 
   // place the most efficient utility projects or their service
-  for (int i = 0; i < 1024; i++) {
-    placeUtilityProjects(uniqueUtilityProjects);
-  }
+  placeUniqueUtilityProjects(uniqueUtilityProjects);
 
-  // re-iterate with the top 10% less efficient utility projects
-  for (int i = 0; i < utilityProjects.length / 10; i++) {
-    placeUtilityProjects(
-      utilityProjects,
-      currentUtilityProject: i,
-      placeUnique: false,
+  // re-iterate with the top 30% less efficient projects that might fit in the free space
+  for (int i = 0; i < residentialProjects.length / 10 * 3; i++) {
+    placeResidentialProjects(
+      residentialProjects,
+      currentResidentialProject: i,
+      spaced: false,
     );
   }
 
-  // re-iterate with the top 10% less efficient projects that might fit in the free space
-  for (int i = 1; i < residentialProjects.length / 10; i++) {
-    placeResidentialProjects(residentialProjects, i, spaced: false);
+  // re-iterate with the top 30% less efficient utility projects
+  for (int i = 0; i < utilityProjects.length / 10 * 3; i++) {
+    placeUtilityProjects(
+      utilityProjects,
+      currentUtilityProject: i,
+    );
   }
 
   IOSink outputSink = new File(argResults['output']).openWrite();
@@ -185,7 +199,10 @@ Future parseInput(Stream inputLines) async {
           lineInParsingProject++;
         } else {
           Project currentProject = projects[nextParsingProject - 1];
-          currentProject.parseAndAddRowOfCells(lineInParsingProject - 1, line);
+          currentProject.parseAndAddRowOfCells(
+            lineInParsingProject - 1,
+            line,
+          );
 
           // reset the parsing line
           if (lineInParsingProject == currentProject.height) {
@@ -241,7 +258,7 @@ List<Project> getUtilityProjects() {
   return utilityProjects;
 }
 
-void sortProject(List<Project> project) {
+void sortProjects(List<Project> project) {
   project.sort((a, b) => b.efficiency.compareTo(a.efficiency));
 }
 
@@ -276,8 +293,8 @@ List<Project> getUniqueUtilityProjects(List<Project> utilityProjects) {
 }
 
 void placeResidentialProjects(
-  List<Project> residentialProjects,
-  int currentResidentialProject, {
+  List<Project> residentialProjects, {
+  int currentResidentialProject,
   bool spaced: true,
 }) {
   for (int row = 0; row < cityRows; row++) {
@@ -302,10 +319,45 @@ void placeResidentialProjects(
   }
 }
 
+void placeUniqueUtilityProjects(List<Project> utilityProjects) {
+  int currentUtilityProject = 0;
+  bool placing = true;
+
+  for (int row = 0; row < cityRows; row++) {
+    for (int column = 0; column < cityColumns; column++) {
+      Cell cell = new Cell(row, column);
+
+      int startingUtilityProject = currentUtilityProject;
+      bool isPastSelf = false;
+
+      while (placing) {
+        if (utilityProjects[currentUtilityProject].canPlace(cell)) {
+          utilityProjects[currentUtilityProject].place(cell);
+
+          placing = false;
+          currentUtilityProject++;
+        }
+
+        if (startingUtilityProject == currentUtilityProject && isPastSelf) {
+          placing = false;
+          currentUtilityProject++;
+        }
+
+        isPastSelf = true;
+
+        if (currentUtilityProject >= utilityProjects.length) {
+          currentUtilityProject = 0;
+        }
+      }
+
+      placing = true;
+    }
+  }
+}
+
 void placeUtilityProjects(
   List<Project> utilityProjects, {
-  int currentUtilityProject: 0,
-  bool placeUnique: true,
+  int currentUtilityProject,
 }) {
   for (int row = 0; row < cityRows; row++) {
     for (int column = 0; column < cityColumns; column++) {
@@ -314,9 +366,7 @@ void placeUtilityProjects(
       if (utilityProjects[currentUtilityProject].canPlace(cell)) {
         utilityProjects[currentUtilityProject].place(cell);
 
-        if (placeUnique) {
-          currentUtilityProject++;
-        }
+        currentUtilityProject++;
       }
 
       if (currentUtilityProject >= utilityProjects.length) {

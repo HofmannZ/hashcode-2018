@@ -11,9 +11,9 @@
       "type": "dart",
       "args": [
         "--input",
-        "inputs/a_example.in",
+        "inputs/c_going_green.in",
         "--output",
-        "outputs/a_example.out"
+        "outputs/c_going_green.out"
       ],
       "showMemoryUsage": true
     }
