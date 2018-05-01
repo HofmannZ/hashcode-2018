@@ -11,9 +11,9 @@
       "type": "dart",
       "args": [
         "--input",
-        "inputs/c_going_green.in",
+        "inputs/f_different_footprints.in",
         "--output",
-        "outputs/c_going_green.out"
+        "outputs/f_different_footprints.out"
       ],
       "showMemoryUsage": true
     }

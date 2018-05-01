@@ -20,8 +20,8 @@ extensions = [
   '.out'
 ]
 
-file_a_in = input_path + files[2] + extensions[0]
-file_a_out = output_path + files[2] + extensions[1]
+file_a_in = input_path + files[5] + extensions[0]
+file_a_out = output_path + files[5] + extensions[1]
 
 with open(file_a_in) as f:
   file_a_content = f.readlines()

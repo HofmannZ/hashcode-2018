@@ -285,7 +285,11 @@ List<Project> getUniqueUtilityProjects(List<Project> utilityProjects) {
       uniqueUtilityProjects.add(uniqueUtilityProject);
       currentUtillity++;
     } else {
-      hasMoreUnique = false;
+      if (currentUtillity < 100) {
+        currentUtillity++;
+      } else {
+        hasMoreUnique = false;
+      }
     }
   }
 

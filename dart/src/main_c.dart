@@ -248,132 +248,154 @@ void placeDistrict(
   // place residential projects
   currentCell.row = initialCell.row + 20;
   currentCell.column = initialCell.column + 20;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 8;
   currentCell.column = initialCell.column + 13;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 8;
   currentCell.column = initialCell.column + 15;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 12;
   currentCell.column = initialCell.column + 9;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 12;
   currentCell.column = initialCell.column + 11;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 12;
   currentCell.column = initialCell.column + 13;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 12;
   currentCell.column = initialCell.column + 15;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 11;
   currentCell.column = initialCell.column + 30;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 18;
   currentCell.column = initialCell.column + 3;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 20;
   currentCell.column = initialCell.column + 1;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 25;
   currentCell.column = initialCell.column + 6;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 25;
   currentCell.column = initialCell.column + 8;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 28;
   currentCell.column = initialCell.column + 10;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 28;
   currentCell.column = initialCell.column + 12;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 35;
   currentCell.column = initialCell.column + 16;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 35;
   currentCell.column = initialCell.column + 18;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 35;
   currentCell.column = initialCell.column + 20;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 39;
   currentCell.column = initialCell.column + 20;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 37;
   currentCell.column = initialCell.column + 22;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 27;
   currentCell.column = initialCell.column + 31;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 30;
   currentCell.column = initialCell.column + 27;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 30;
   currentCell.column = initialCell.column + 29;
+
   if (projects[7].canPlace(city, currentCell)) {
     projects[7].place(city, currentCell);
   }
@@ -381,30 +403,35 @@ void placeDistrict(
   // place utility projects
   currentCell.row = initialCell.row + 19;
   currentCell.column = initialCell.column + 20;
+
   if (projects[142].canPlace(city, currentCell)) {
     projects[142].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 27;
   currentCell.column = initialCell.column + 29;
+
   if (projects[185].canPlace(city, currentCell)) {
     projects[185].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 27;
   currentCell.column = initialCell.column + 30;
+
   if (projects[112].canPlace(city, currentCell)) {
     projects[112].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 27;
   currentCell.column = initialCell.column + 27;
+
   if (projects[195].canPlace(city, currentCell)) {
     projects[195].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 26;
   currentCell.column = initialCell.column + 27;
+
   if (projects[199].canPlace(city, currentCell)) {
     projects[199].place(city, currentCell);
   }
@@ -417,6 +444,7 @@ void placeDistrict(
 
   currentCell.row = initialCell.row + 7;
   currentCell.column = initialCell.column + 18;
+
   if (projects[193].canPlace(city, currentCell)) {
     projects[193].place(city, currentCell);
   }
@@ -429,42 +457,49 @@ void placeDistrict(
 
   currentCell.row = initialCell.row + 19;
   currentCell.column = initialCell.column + 22;
+
   if (projects[166].canPlace(city, currentCell)) {
     projects[166].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 24;
   currentCell.column = initialCell.column + 3;
+
   if (projects[188].canPlace(city, currentCell)) {
     projects[188].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 9;
   currentCell.column = initialCell.column + 25;
+
   if (projects[169].canPlace(city, currentCell)) {
     projects[169].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 25;
   currentCell.column = initialCell.column + 11;
+
   if (projects[184].canPlace(city, currentCell)) {
     projects[184].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 22;
   currentCell.column = initialCell.column + 3;
+
   if (projects[104].canPlace(city, currentCell)) {
     projects[104].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 1;
   currentCell.column = initialCell.column + 20;
+
   if (projects[111].canPlace(city, currentCell)) {
     projects[111].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 15;
   currentCell.column = initialCell.column + 25;
+
   if (projects[152].canPlace(city, currentCell)) {
     projects[152].place(city, currentCell);
   }
@@ -477,24 +512,28 @@ void placeDistrict(
 
   currentCell.row = initialCell.row + 28;
   currentCell.column = initialCell.column + 14;
+
   if (projects[121].canPlace(city, currentCell)) {
     projects[121].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 20;
   currentCell.column = initialCell.column + 27;
+
   if (projects[137].canPlace(city, currentCell)) {
     projects[137].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 20;
   currentCell.column = initialCell.column + 22;
+
   if (projects[124].canPlace(city, currentCell)) {
     projects[124].place(city, currentCell);
   }
 
   currentCell.row = initialCell.row + 16;
   currentCell.column = initialCell.column + 5;
+
   if (projects[146].canPlace(city, currentCell)) {
     projects[146].place(city, currentCell);
   }
