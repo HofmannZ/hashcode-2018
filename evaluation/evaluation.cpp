@@ -119,34 +119,40 @@ struct buildingType {
 
     long calculateScore(int startingX, int startingY) {
         utilityBlock* utilitiesAround = new utilityBlock();
+        int around[4];
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                calculateScorePerPoint(i + startingX, j + startingY, *utilitiesAround);
+                if (shape[i][j] == '#') {
+                    around[0] = (i > 0 && shape[i - 1][j] == '#') ? 0 : 1;
+                    around[1] = (i + 1 < height && shape[i + 1][j] == '#') ? 0 : 1;
+                    around[2] = (j > 0 && shape[i][j - 1] == '#') ? 0 : 1;
+                    around[3] = (j + 1 < width && shape[i][j + 1] == '#') ? 0 : 1;
+
+                calculateScorePerPoint(i + startingX, j + startingY, *utilitiesAround, around);
+                }
             }
         }
 
         return utilitiesAround->countUtilities();
     }
 
-    void calculateScorePerPoint(int x, int y, utilityBlock& around) {
-        int minX = x - maxDistance;
-        int maxX = x + maxDistance;
-        int minY = y - maxDistance;
-        int maxY = y + maxDistance;
+    void calculateScorePerPoint(int x, int y, utilityBlock& neighbours, int around[4]) {
+        int minX = around[0] ? (x - maxDistance) : x;
+        int maxX = around[1] ? (x + maxDistance) : x;
+        int minY = around[2] ? (y - maxDistance) : y;
+        int maxY = around[3] ? (y + maxDistance) : y;
         int distance = 0;
 
         //utilityBlock* utilitiesAround = new utilityBlock();
 
         for (int newX = minX; newX <= maxX; newX++) {
             for (int newY = minY; newY <= maxY; newY++) {
-                if (newX >= 0 && newX < cityRows && newY >= 0 && newY < cityCols) {
-                    distance = abs(newX - x) + abs(newY - y);
+                distance = abs(newX - x) + abs(newY - y);
 
-                    if (distance <= maxDistance && cityMap[newX][newY] >= 0) {
-                        around.setUtility(cityMap[newX][newY]);
-                    }
-                }
+                if (distance <= maxDistance)
+                    if (newX >= 0 && newX < cityRows && newY >= 0 && newY < cityCols && cityMap[newX][newY] >= 0)
+                        neighbours.setUtility(cityMap[newX][newY]);
             }
         }
     }
