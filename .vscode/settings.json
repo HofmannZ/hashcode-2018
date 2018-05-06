@@ -10,7 +10,8 @@
         "stdexcept": "cpp",
         "type_traits": "cpp",
         "typeinfo": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp"
     },
     "python.linting.pylintEnabled": false,
     "python.formatting.provider": "autopep8"
